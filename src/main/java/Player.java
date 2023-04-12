@@ -19,6 +19,18 @@ public class Player {
         this.deckOfCards = new ArrayList<Card>();
     }
 
+    public void drawCards(int numCards) {
+        if (this.deckOfCards.size() < numCards) {
+            return;
+        }
+
+        for (int i = 0; i < numCards; i++) {
+            Card card = deckOfCards.remove(0);
+
+            this.handOfCards.add(card);
+        }
+    }
+
     public void takeDamage(int x) {
         x -= this.armor;
         this.health -= x;
@@ -31,6 +43,12 @@ public class Player {
         }
 
         return totalHandMana;
+    }
+
+    public void startTurn() {
+        this.drawCards(1);
+        this.armor = 0;
+        this.mana = 3;
     }
 
     public Card getNextPlayableCard() {
