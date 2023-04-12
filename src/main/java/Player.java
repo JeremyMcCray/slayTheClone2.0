@@ -19,6 +19,11 @@ public class Player {
         this.deckOfCards = new ArrayList<Card>();
     }
 
+    public void takeDamage(int x) {
+        x -= this.armor;
+        this.health -= x;
+    }
+
     public int getHandTotalMana() {
         int totalHandMana = 0;
         for (Card card : handOfCards) {
