@@ -1,33 +1,34 @@
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Data
 public class Player {
     int health;
     int armor;
     int mana;
-    ArrayList<Card> handOfCards;
-    ArrayList<Card> deckOfCards;
+    ArrayList<Card> hand;
+    ArrayList<Card> deck;
 
     public Player(int health) {
         this.health = health;
 
         this.armor = 0;
         this.mana = 3;
-        this.handOfCards = new ArrayList<Card>();
-        this.deckOfCards = new ArrayList<Card>();
+        this.hand = new ArrayList<Card>();
+        this.deck = new ArrayList<Card>();
     }
 
     public void drawCards(int numCards) {
-        if (this.deckOfCards.size() < numCards) {
+        if (this.deck.size() < numCards) {
             return;
         }
 
         for (int i = 0; i < numCards; i++) {
-            Card card = deckOfCards.remove(0);
+            Card card = deck.remove(0);
 
-            this.handOfCards.add(card);
+            this.hand.add(card);
         }
     }
 
@@ -38,7 +39,7 @@ public class Player {
 
     public int getHandTotalMana() {
         int totalHandMana = 0;
-        for (Card card : handOfCards) {
+        for (Card card : hand) {
             totalHandMana += card.cost;
         }
 
@@ -51,8 +52,13 @@ public class Player {
         this.mana = 3;
     }
 
+    public void startGame() {
+        Collections.shuffle(this.deck);
+        this.drawCards(3);
+    }
+
     public Card getNextPlayableCard() {
-        for (Card card: this.handOfCards) {
+        for (Card card: this.hand) {
             if (card.cost <= this.mana) {
                 return card;
             }
