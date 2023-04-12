@@ -5,11 +5,13 @@ public class Card {
     int cost;
     int damage;
     int armor;
+    String description;
 
-    public Card(int cost, int damage, int armor) {
+    public Card(int cost, int damage, int armor, String description) {
         this.cost = cost;
         this.damage = damage;
         this.armor = armor;
+        this.description = description;
     }
 
     public void cast(Player target) {

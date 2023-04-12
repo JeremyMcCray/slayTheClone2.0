@@ -69,20 +69,24 @@ public class Player {
 
 
     public void autoRunTurn(Player opponent) {
-        Card cardToCast = this.getNextPlayableCard();
+        Card card = this.getNextPlayableCard();
 
-        while (cardToCast != null) {
-            this.playCard(cardToCast, opponent);
+        while (card != null) {
+            if (card.damage > 0) {
+                playCard(card, opponent);
+            } else {
+                playCard(card, this);
+            }
+
+            // choose next card
+            card = this.getNextPlayableCard();
         }
     }
 
-    public void playCard(Card card, Player opponent) {
+    public void playCard(Card card, Player target) {
+        hand.remove(card);
         this.mana -= card.cost;
 
-        if (card.damage > 0) {
-            card.cast(opponent);
-        } else {
-            card.cast(this);
-        }
+        card.cast(target);
     }
 }
