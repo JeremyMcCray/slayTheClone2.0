@@ -4,57 +4,56 @@ import java.util.ArrayList;
 
 @Data
 public class Player {
-
     int health;
-
+    int armor;
     int mana;
-
     ArrayList<Card> handOfCards;
-
     ArrayList<Card> deckOfCards;
 
+    public Player(int health) {
+        this.health = health;
+
+        this.armor = 0;
+        this.mana = 3;
+        this.handOfCards = new ArrayList<Card>();
+        this.deckOfCards = new ArrayList<Card>();
+    }
 
     public int getHandTotalMana() {
         int totalHandMana = 0;
-        for (Card card : handOfCards
-        ) {
-            totalHandMana += card.castCost;
+        for (Card card : handOfCards) {
+            totalHandMana += card.cost;
         }
 
         return totalHandMana;
     }
 
-    // shouldn't need to check for player hand size?, maybe it should return a reference to the card instead of the mana?
-    public int getCheapestCardCost(ArrayList<Card> checkedCards) {
-        int cheapestCardsCost = Integer.MIN_VALUE;
-        // why is this the default return?
-
-        if (checkedCards.size() > 0) {
-            cheapestCardsCost = Integer.MAX_VALUE;
-            for (Card card : checkedCards) {
-                if (card.castCost < cheapestCardsCost) {
-                    cheapestCardsCost = card.castCost;
-                }
+    public Card getNextPlayableCard() {
+        for (Card card: this.handOfCards) {
+            if (card.cost <= this.mana) {
+                return card;
             }
         }
 
-        return cheapestCardsCost;
+        return null;
     }
 
 
-    public void runEnemyTurn() {
+    public void autoRunTurn(Player opponent) {
+        Card cardToCast = this.getNextPlayableCard();
 
-        int currentCheapestCard = getCheapestCardCost(handOfCards);
+        while (cardToCast != null) {
+            this.playCard(cardToCast, opponent);
+        }
+    }
 
-        // while (player.handSize > 0 && currentCheapestCard <= player.mana) {
-        while (mana > 0 && currentCheapestCard > Integer.MIN_VALUE) {
-            for (Card card : handOfCards) {
-                if (mana > card.castCost) {
-                    card.cardEffect();
-                    mana -= card.castCost;
-                    currentCheapestCard = getCheapestCardCost(handOfCards);
-                }
-            }
+    public void playCard(Card card, Player opponent) {
+        this.mana -= card.cost;
+
+        if (card.damage > 0) {
+            card.cast(opponent);
+        } else {
+            card.cast(this);
         }
     }
 }
